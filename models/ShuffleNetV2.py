@@ -207,7 +207,7 @@ def shufflenet_v2_x2_0(pretrained=False, progress=True, **kwargs):
 
 
 if __name__ == '__main__':
-    net = shufflenet_v2_x0_5(pretrained=True, progress=True, num_classes=10)
+    net = shufflenet_v2_x0_5(pretrained=False, progress=False, num_classes=100)
     print(net)
 
     num_parameters = 0.
@@ -220,5 +220,5 @@ if __name__ == '__main__':
         num_parameters += num_layer_param
     print(num_parameters)
 
-    out = net((torch.randn(1, 3, 256, 512)))
+    out = net((torch.randn(10, 3, 32, 32)))
     print(out.size())

@@ -16,12 +16,12 @@ from torchvision import datasets
 from torch.utils.tensorboard import SummaryWriter
 
 # user-defined
-from models import ResNet, ResNetD
 from datagen import jsonDataset
 from optimizer import scheduled_optim
 import mixup
 import label_smoothing
 import utils
+import net_factory
 
 
 parser = argparse.ArgumentParser()
@@ -153,24 +153,7 @@ valid_loader = torch.utils.data.DataLoader(
 dataloaders = {'train': train_loader, 'valid': valid_loader}
 
 ''' Model'''
-if config['model']['type'] == 'resnet':
-    if config['model']['arch'] == 'resnet50':
-        net = ResNet.resnet50(pretrained=False, progress=False, num_classes=num_classes)
-    elif config['model']['arch'] == 'resnext50':
-        net = ResNet.resnext50_32x4d(pretrained=False, progress=False, num_classes=num_classes)
-    elif config['model']['arch'] == 'resnet50d':
-        net = ResNetD.resnet50d(pretrained=False, progress=False, num_classes=num_classes)
-elif config['modle']['type'] == 'tresnet':
-    pass
-elif config['modle']['type'] == 'regnet':
-    pass
-elif config['modle']['type'] == 'resnest':
-    pass
-elif config['modle']['type'] == 'efficient':
-    pass
-elif config['modle']['type'] == 'assembled':
-    pass
-
+net = net_factory.load_model(config=config, num_classes=num_classes)
 net = net.to(device)
 
 '''print out net'''
@@ -225,7 +208,7 @@ print("num_classes : " + str(num_classes))
 
 utils.print_config(config)
 
-# input("Press any key to continue..")
+input("Press any key to continue..")
 
 def view_inputs(x):
     import cv2
@@ -361,7 +344,7 @@ def iterate(epoch, phase):
 
 if __name__ == '__main__':
     for epoch in range(start_epoch, config['params']['epoch'], 1):
-        # iterate(epoch=epoch, phase='train')
+        iterate(epoch=epoch, phase='train')
         iterate(epoch=epoch, phase='valid')
     summary_writer.close()
 
