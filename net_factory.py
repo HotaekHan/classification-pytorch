@@ -1,4 +1,4 @@
-from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3
+from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3, EfficientNet
 
 
 def load_model(config, num_classes):
@@ -25,7 +25,22 @@ def load_model(config, num_classes):
     elif config['model']['type'] == 'resnest':
         pass
     elif config['model']['type'] == 'efficient':
-        pass
+        if config['model']['arch'] == 'b0':
+            net = EfficientNet.efficientnet_b0(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'b1':
+            net = EfficientNet.efficientnet_b1(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'b2':
+            net = EfficientNet.efficientnet_b2(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'b3':
+            net = EfficientNet.efficientnet_b3(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'b4':
+            net = EfficientNet.efficientnet_b4(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'b5':
+            net = EfficientNet.efficientnet_b5(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'b6':
+            net = EfficientNet.efficientnet_b6(pretrained=False, num_classes=num_classes)
+        else:
+            raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'assembled':
         pass
     elif config['model']['type'] == 'shufflenet':
@@ -59,8 +74,8 @@ if __name__ == '__main__':
     import torch
 
     config = {'model':
-                  {'type':'mobilenet',
-                   'arch':'small_075'}}
+                  {'type':'efficient',
+                   'arch':'b6'}}
 
     net = load_model(config, 100)
 
