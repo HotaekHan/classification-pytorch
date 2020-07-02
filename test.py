@@ -176,8 +176,8 @@ def do_test(phase):
     net.eval()
     phase_dataloader = dataloaders[phase]
 
-    all_correct = 0
-    all_samples = 0
+    all_correct = 0.
+    all_samples = 0.
     with torch.set_grad_enabled(False):
         # with autograd.detect_anomaly():
         for batch_idx, (inputs, targets) in enumerate(tqdm(phase_dataloader)):
@@ -189,11 +189,11 @@ def do_test(phase):
             outputs = logits.log_softmax(dim=1)
             preds = outputs.argmax(dim=1, keepdim=False)
 
-            all_correct += preds.eq(targets).float().sum()
+            all_correct += preds.eq(targets).float().sum().item()
             all_samples += inputs.shape[0]
 
     accuracy = all_correct / all_samples
-    print('%-3s: %.3f' % (phase, accuracy))
+    print('%-3s: %.5f' % (phase, accuracy))
 
 if __name__ == '__main__':
     for dataset_name in dataloaders:
