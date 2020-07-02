@@ -11,17 +11,17 @@ def load_model(config, num_classes):
             net = ResNetD.resnet50d(pretrained=False, progress=False, num_classes=num_classes)
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
-    elif config['modle']['type'] == 'tresnet':
+    elif config['model']['type'] == 'tresnet':
         pass
-    elif config['modle']['type'] == 'regnet':
+    elif config['model']['type'] == 'regnet':
         pass
-    elif config['modle']['type'] == 'resnest':
+    elif config['model']['type'] == 'resnest':
         pass
-    elif config['modle']['type'] == 'efficient':
+    elif config['model']['type'] == 'efficient':
         pass
-    elif config['modle']['type'] == 'assembled':
+    elif config['model']['type'] == 'assembled':
         pass
-    elif config['modle']['type'] == 'shufflenet':
+    elif config['model']['type'] == 'shufflenet':
         if config['model']['arch'] == 'v2_x0_5':
             net = ShuffleNetV2.shufflenet_v2_x0_5(pretrained=False, progress=False, num_classes=num_classes)
         elif config['model']['arch'] == 'v2_x1_0':
