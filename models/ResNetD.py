@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.utils.checkpoint as cp
 from torch.hub import load_state_dict_from_url
+from .layers.squeeze_and_excite import SEModule
 
 
 __all__ = ['ResNet', 'resnet50d', 'resnet101d',
@@ -68,6 +69,9 @@ class Bottleneck(nn.Module):
         self.stride = stride
 
         self.use_se = use_se
+        if self.use_se:
+            self.se_block = \
+                SEModule(channels=planes * self.expansion, reduction_channels=planes * self.expansion // 16)
 
     def forward(self, x):
         identity = x
@@ -120,6 +124,9 @@ class Bottleneck_pre_activation(nn.Module):
         self.stride = stride
 
         self.use_se = use_se
+        if self.use_se:
+            self.se_block = \
+                SEModule(channels=planes * self.expansion, reduction_channels=planes * self.expansion // 16)
         self.efficient = efficient
 
     def forward(self, x):
