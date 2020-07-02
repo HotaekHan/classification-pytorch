@@ -1,4 +1,4 @@
-from models import ResNet, ResNetD, ShuffleNetV2, TResNet
+from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3
 
 
 def load_model(config, num_classes):
@@ -39,6 +39,17 @@ def load_model(config, num_classes):
             net = ShuffleNetV2.shufflenet_v2_x2_0(pretrained=False, progress=False, num_classes=num_classes)
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
+    elif config['model']['type'] == 'mobilenet':
+        if config['model']['arch'] == 'small_075':
+            net = Mobilenetv3.mobilenetv3_small_075(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'small_100':
+            net = Mobilenetv3.mobilenetv3_small_100(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'large_075':
+            net = Mobilenetv3.mobilenetv3_large_075(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'large_100':
+            net = Mobilenetv3.mobilenetv3_large_100(pretrained=False, num_classes=num_classes)
+        else:
+            raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     else:
         raise ValueError('Unsupported architecture: ' + str(config['model']['type']))
 
@@ -48,8 +59,8 @@ if __name__ == '__main__':
     import torch
 
     config = {'model':
-                  {'type':'tresnet',
-                   'arch':'tresnetxl'}}
+                  {'type':'mobilenet',
+                   'arch':'small_075'}}
 
     net = load_model(config, 100)
 
