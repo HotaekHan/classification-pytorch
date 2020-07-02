@@ -5,6 +5,7 @@ import random
 import numpy as np
 import shutil
 from tqdm import tqdm
+from time import perf_counter
 
 # pytorch
 import torch
@@ -19,6 +20,7 @@ from torch.utils.tensorboard import SummaryWriter
 from datagen import jsonDataset
 import utils
 import net_factory
+from timer import Timer
 
 
 parser = argparse.ArgumentParser()
@@ -195,7 +197,39 @@ def do_test(phase):
     accuracy = all_correct / all_samples
     print('%-3s: %.5f' % (phase, accuracy))
 
+def get_inference_time():
+    print('get elapsed time..')
+    net.eval()
+    data_loader = dataloaders['test']
+
+    warmup_period = 10
+    timer_img = Timer()
+    timer_infer = Timer()
+    with torch.set_grad_enabled(False):
+        for batch_idx, (inputs, targets) in enumerate(tqdm(data_loader)):
+            if batch_idx == warmup_period:
+                timer_img.reset()
+                timer_infer.reset()
+
+            torch.cuda.synchronize()
+            timer_img.tic()
+            inputs = inputs.to(device)
+            torch.cuda.synchronize()
+            timer_img.toc()
+
+            torch.cuda.synchronize()
+            timer_infer.tic()
+            logits = net(inputs)
+            torch.cuda.synchronize()
+            timer_infer.toc()
+
+    print('mean. elapsed time(load): %0.4f' % (timer_img.average_time * 1000.))
+    print('mean. elapsed time(inference): %0.4f' % (timer_infer.average_time * 1000.))
+
+
+
 if __name__ == '__main__':
     for dataset_name in dataloaders:
         print('Test on ' + str(dataset_name))
         do_test(dataset_name)
+    get_inference_time()
