@@ -1,4 +1,4 @@
-from models import ResNet, ResNetD, ShuffleNetV2
+from models import ResNet, ResNetD, ShuffleNetV2, TResNet
 
 
 def load_model(config, num_classes):
@@ -12,7 +12,14 @@ def load_model(config, num_classes):
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'tresnet':
-        pass
+        if config['model']['arch'] == 'tresnetm':
+            net = TResNet.TResnetM(num_classes=num_classes)
+        elif config['model']['arch'] == 'tresnetl':
+            net = TResNet.TResnetL(num_classes=num_classes)
+        elif config['model']['arch'] == 'tresnetxl':
+            net = TResNet.TResnetXL(num_classes=num_classes)
+        else:
+            raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'regnet':
         pass
     elif config['model']['type'] == 'resnest':
@@ -38,4 +45,25 @@ def load_model(config, num_classes):
     return net
 
 if __name__ == '__main__':
-    net = load_model()
+    import torch
+
+    config = {'model':
+                  {'type':'tresnet',
+                   'arch':'tresnetxl'}}
+
+    net = load_model(config, 100)
+
+    num_parameters = 0.
+    for param in net.parameters():
+        sizes = param.size()
+
+        num_layer_param = 1.
+        for size in sizes:
+            num_layer_param *= size
+        num_parameters += num_layer_param
+
+    print(net)
+    print("num. of parameters : " + str(num_parameters))
+
+    out = net((torch.randn(10, 3, 32, 32)))
+    print(out.size())
