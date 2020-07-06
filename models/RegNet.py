@@ -10,11 +10,6 @@
 import numpy as np
 from models import AnyNet
 
-WA = 50.0 # 5.0
-W0 = 96 # 32
-WM = 2.5
-DEPTH = 20 # 10
-GROUP_W = 16
 BOT_MUL = 1.0
 STRIDE = 2
 STEM_TYPE = 'simple_stem_in'
@@ -61,15 +56,15 @@ class RegNet(AnyNet.AnyNet):
     """RegNet model."""
 
     @staticmethod
-    def get_args(num_classes, used_se):
+    def get_args(config):
         """Convert RegNet to AnyNet parameter format."""
         # Generate RegNet ws per block
-        w_a, w_0, w_m, d = WA, W0, WM, DEPTH
+        w_a, w_0, w_m, d = config['wa'], config['w0'], config['wm'], config['depth']
         ws, num_stages, _, _ = generate_regnet(w_a, w_0, w_m, d)
         # Convert to per stage format
         s_ws, s_ds = get_stages_from_blocks(ws, ws)
         # Use the same gw, bm and ss for each stage
-        s_gs = [GROUP_W for _ in range(num_stages)]
+        s_gs = [config['group_w'] for _ in range(num_stages)]
         s_bs = [BOT_MUL for _ in range(num_stages)]
         s_ss = [STRIDE for _ in range(num_stages)]
         # Adjust the compatibility of ws and gws
@@ -84,12 +79,12 @@ class RegNet(AnyNet.AnyNet):
             "ss": s_ss,
             "bms": s_bs,
             "gws": s_gs,
-            "se_r": SE_R if used_se else None,
-            "nc": num_classes,
+            "se_r": SE_R if config['se_on'] else None,
+            "nc": int(config['num_classes']),
         }
 
-    def __init__(self, num_classes, RegNetY):
-        kwargs = RegNet.get_args(num_classes, RegNetY)
+    def __init__(self, config):
+        kwargs = RegNet.get_args(config)
         super(RegNet, self).__init__(**kwargs)
 
     # @staticmethod

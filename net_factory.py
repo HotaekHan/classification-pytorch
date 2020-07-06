@@ -21,10 +21,87 @@ def load_model(config, num_classes):
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'regnet':
-        if config['model']['arch'] == 'regnetx':
-            net = RegNet.RegNet(num_classes=num_classes, RegNetY=False)
-        elif config['model']['arch'] == 'regnety':
-            net = RegNet.RegNet(num_classes=num_classes, RegNetY=True)
+        regnet_config = dict()
+        if config['model']['arch'] == 'regnetx-200mf':
+            regnet_config['depth'] = 13
+            regnet_config['w0'] = 24
+            regnet_config['wa'] = 36.44
+            regnet_config['wm'] = 2.49
+            regnet_config['group_w'] = 8
+            regnet_config['se_on'] = False
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnetx-600mf':
+            regnet_config['depth'] = 16
+            regnet_config['w0'] = 48
+            regnet_config['wa'] = 36.97
+            regnet_config['wm'] = 2.24
+            regnet_config['group_w'] = 24
+            regnet_config['se_on'] = False
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnetx-4.0gf':
+            regnet_config['depth'] = 23
+            regnet_config['w0'] = 96
+            regnet_config['wa'] = 38.65
+            regnet_config['wm'] = 2.43
+            regnet_config['group_w'] = 40
+            regnet_config['se_on'] = False
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnetx-6.4gf':
+            regnet_config['depth'] = 17
+            regnet_config['w0'] = 184
+            regnet_config['wa'] = 60.83
+            regnet_config['wm'] = 2.07
+            regnet_config['group_w'] = 56
+            regnet_config['se_on'] = False
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnety-200mf':
+            regnet_config['depth'] = 13
+            regnet_config['w0'] = 24
+            regnet_config['wa'] = 36.44
+            regnet_config['wm'] = 2.49
+            regnet_config['group_w'] = 8
+            regnet_config['se_on'] = True
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnety-600mf':
+            regnet_config['depth'] = 15
+            regnet_config['w0'] = 48
+            regnet_config['wa'] = 32.54
+            regnet_config['wm'] = 2.32
+            regnet_config['group_w'] = 16
+            regnet_config['se_on'] = True
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnety-4.0gf':
+            regnet_config['depth'] = 22
+            regnet_config['w0'] = 96
+            regnet_config['wa'] = 31.41
+            regnet_config['wm'] = 2.24
+            regnet_config['group_w'] = 64
+            regnet_config['se_on'] = True
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
+        elif config['model']['arch'] == 'regnety-6.4gf':
+            regnet_config['depth'] = 25
+            regnet_config['w0'] = 112
+            regnet_config['wa'] = 33.22
+            regnet_config['wm'] = 2.27
+            regnet_config['group_w'] = 72
+            regnet_config['se_on'] = True
+            regnet_config['num_classes'] = num_classes
+
+            net = RegNet.RegNet(regnet_config)
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'resnest':
@@ -80,7 +157,7 @@ if __name__ == '__main__':
 
     config = {'model':
                   {'type':'regnet',
-                   'arch':'regnety'}}
+                   'arch':'regnety-200mf'}}
 
     net = load_model(config, 100)
 
