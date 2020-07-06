@@ -1,4 +1,4 @@
-from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3, EfficientNet, RegNet
+from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3, EfficientNet, RegNet, ResNest
 
 
 def load_model(config, num_classes):
@@ -105,7 +105,12 @@ def load_model(config, num_classes):
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'resnest':
-        pass
+        if config['model']['arch'] == 'resnest50':
+            net = ResNest.resnest50(pretrained=False, num_classes=num_classes)
+        elif config['model']['arch'] == 'resnest101':
+            net = ResNest.resnest101(pretrained=False, num_classes=num_classes)
+        else:
+            raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     elif config['model']['type'] == 'efficient':
         if config['model']['arch'] == 'b0':
             net = EfficientNet.efficientnet_b0(pretrained=False, num_classes=num_classes)
@@ -156,8 +161,8 @@ if __name__ == '__main__':
     import torch
 
     config = {'model':
-                  {'type':'regnet',
-                   'arch':'regnety-200mf'}}
+                  {'type':'resnest',
+                   'arch':'resnest50'}}
 
     net = load_model(config, 100)
 
