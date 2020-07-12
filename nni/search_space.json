@@ -1,0 +1,6 @@
+{
+    "batch_size": {"_type":"choice", "_value": [16, 32, 64, 128, 256]},
+    "lr":{"_type":"uniform","_value":[0.0001, 1.0]},
+    "mixup":{"_type":"uniform","_value":[0.1, 0.5]},
+    "smoothing":{"_type":"uniform","_value":[0.01, 0.1]}
+}

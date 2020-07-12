@@ -329,6 +329,7 @@ class ResNeSt(nn.Module):
 
 
 def resnest50(pretrained=False, **kwargs):
+    # ResNeSt-50-fast setting in the paper
     model = ResNeSt(Bottleneck, [3, 4, 6, 3],
                    radix=2, groups=1, bottleneck_width=64,
                    deep_stem=True, stem_width=32, avg_down=True,
