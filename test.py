@@ -197,8 +197,10 @@ def do_test(phase):
     accuracy = all_correct / all_samples
     print('%-3s: %.5f' % (phase, accuracy))
 
-def get_inference_time():
+def get_inference_time(device):
     print('get elapsed time..')
+    global net
+    net = net.to(device)
     net.eval()
     data_loader = dataloaders['test']
 
@@ -223,6 +225,7 @@ def get_inference_time():
             torch.cuda.synchronize()
             timer_infer.toc()
 
+    print(device)
     print('mean. elapsed time(load): %0.4f' % (timer_img.average_time * 1000.))
     print('mean. elapsed time(inference): %0.4f' % (timer_infer.average_time * 1000.))
 
@@ -232,4 +235,5 @@ if __name__ == '__main__':
     for dataset_name in dataloaders:
         print('Test on ' + str(dataset_name))
         do_test(dataset_name)
-    get_inference_time()
+    get_inference_time(device=device)
+    get_inference_time(device='cpu')
