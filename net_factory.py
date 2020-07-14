@@ -1,4 +1,4 @@
-from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3, EfficientNet, RegNet, ResNest
+from models import ResNet, ResNetD, ShuffleNetV2, TResNet, Mobilenetv3, EfficientNet, RegNet, ResNest, ReXNet
 
 
 def load_model(config, num_classes):
@@ -152,6 +152,15 @@ def load_model(config, num_classes):
             net = Mobilenetv3.mobilenetv3_large_100(pretrained=False, num_classes=num_classes)
         else:
             raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
+    elif config['model']['type'] == 'rexnet':
+        if config['model']['arch'] == 'rexnet1.0x':
+            net = ReXNet.rexnet(num_classes=num_classes, width_multi=1.0)
+        elif config['model']['arch'] == 'rexnet1.5x':
+            net = ReXNet.rexnet(num_classes=num_classes, width_multi=1.5)
+        elif config['model']['arch'] == 'rexnet2.0x':
+            net = ReXNet.rexnet(num_classes=num_classes, width_multi=2.0)
+        else:
+            raise ValueError('Unsupported architecture: ' + str(config['model']['arch']))
     else:
         raise ValueError('Unsupported architecture: ' + str(config['model']['type']))
 
@@ -161,8 +170,8 @@ if __name__ == '__main__':
     import torch
 
     config = {'model':
-                  {'type':'resnest',
-                   'arch':'resnest50'}}
+                  {'type':'rexnet',
+                   'arch':'rexnet'}}
 
     net = load_model(config, 100)
 
