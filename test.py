@@ -188,7 +188,7 @@ def do_test(phase):
 
             # view_inputs(inputs)
             logits = net(inputs)
-            outputs = logits.log_softmax(dim=1)
+            outputs = logits.softmax(dim=1)
             preds = outputs.argmax(dim=1, keepdim=False)
 
             all_correct += preds.eq(targets).float().sum().item()
