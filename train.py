@@ -124,15 +124,11 @@ elif config['data']['name'] == 'cifar10':
 
     train_dataset, valid_dataset = torch.utils.data.random_split(train_data, [num_train, num_valid])
 elif config['data']['name'] == 'its':
-    target_classes = config['params']['classes'].split('|')
+    target_classes = config['data']['classes'].split('|')
     num_classes = len(target_classes)
-    train_dataset = jsonDataset(path=config['data']['train'].split(' ')[0], classes=target_classes,
-                                transform=None,
-                                input_image_size=img_size)
+    train_dataset = jsonDataset(path='data/its_train_split.json', classes=target_classes)
 
-    valid_dataset = jsonDataset(path=config['data']['valid'].split(' ')[0], classes=target_classes,
-                                transform=None,
-                                input_image_size=img_size)
+    valid_dataset = jsonDataset(path='data/its_valid_split.json', classes=target_classes)
 else:
     raise NotImplementedError('Unsupported Dataset: ' + str(config['data']['name']))
 
